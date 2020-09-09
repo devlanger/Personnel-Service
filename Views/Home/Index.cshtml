@@ -1,0 +1,19 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@if (User.Identity.IsAuthenticated)
+{
+        <div class="text-center">
+            <h1 class="display-4">Dashboard</h1>
+            <div class="container mt-5">
+                <div class="row" style="height:200px; line-height: 200px;">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="col-sm btn btn-secondary btn-lg m-2" asp-controller="Workers" asp-action="Index">Workers</a>
+                    }
+                    <a class="col-sm btn btn-secondary btn-lg m-2" asp-controller="Rooms" asp-action="Index">Rooms</a>
+                    </div>
+            </div>
+        </div>
+}
