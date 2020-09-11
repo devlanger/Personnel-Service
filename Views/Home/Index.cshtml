@@ -13,7 +13,14 @@
                         <a class="col-sm btn btn-secondary btn-lg m-2" asp-controller="Workers" asp-action="Index">Workers</a>
                     }
                     <a class="col-sm btn btn-secondary btn-lg m-2" asp-controller="Rooms" asp-action="Index">Rooms</a>
-                    </div>
+                </div>
+                <div class="row" style="height:200px; line-height: 200px;">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="col-sm btn btn-secondary btn-lg m-2" asp-controller="RoomConnections" asp-action="Index">Coordinators</a>
+                        <a class="col-sm btn btn-secondary btn-lg m-2" asp-controller="RoomConnections" asp-action="Index">Managers</a>
+                    }
+                </div>
             </div>
         </div>
 }

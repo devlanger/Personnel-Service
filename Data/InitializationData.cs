@@ -53,7 +53,6 @@ namespace Personnel_Service.Data
                 if(result.Succeeded)
                 {
                     await userManager.AddToRoleAsync(user, "Admin");
-
                 }
             }
         }

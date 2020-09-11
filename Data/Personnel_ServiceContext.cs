@@ -18,5 +18,7 @@ namespace Personnel_Service.Data
         public DbSet<Personnel_Service.Models.Worker> Worker { get; set; }
 
         public DbSet<Personnel_Service.Models.Room> Room { get; set; }
+
+        public DbSet<Personnel_Service.Models.RoomConnection> RoomConnection { get; set; }
     }
 }

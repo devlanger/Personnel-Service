@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,33 +10,22 @@ using Personnel_Service.Models;
 
 namespace Personnel_Service.Controllers
 {
-    public class RoomsController : Controller
+    public class RoomConnectionsController : Controller
     {
         private readonly Personnel_ServiceContext _context;
 
-        public RoomsController(Personnel_ServiceContext context)
+        public RoomConnectionsController(Personnel_ServiceContext context)
         {
             _context = context;
         }
 
-        // GET: Rooms
-        [Authorize]
+        // GET: RoomConnections
         public async Task<IActionResult> Index()
         {
-            var rooms = await _context.Room.ToListAsync();
-
-            foreach (var item in rooms)
-            {
-                var workersInRoom = await _context.Worker.Where(w => w.RoomId == item.Id).ToListAsync();
-
-                item.Workers = workersInRoom as List<Worker>;
-            }
-
-            return View(rooms);
+            return View(await _context.RoomConnection.ToListAsync());
         }
 
-        // GET: Rooms/Details/5
-        [Authorize]
+        // GET: RoomConnections/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -45,49 +33,39 @@ namespace Personnel_Service.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Room
+            var roomConnection = await _context.RoomConnection
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            var workersInRoom = from w in _context.Worker
-                                select w;
-
-            workersInRoom = workersInRoom.Where(w => w.RoomId == room.Id);
-
-            if (room == null)
+            if (roomConnection == null)
             {
                 return NotFound();
             }
 
-            ViewData["workers"] = await workersInRoom.ToListAsync() as List<Worker>;
-            return View(room);
+            return View(roomConnection);
         }
 
-        // GET: Rooms/Create
-        [Authorize]
+        // GET: RoomConnections/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Rooms/Create
+        // POST: RoomConnections/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Slots,Address")] Room room)
+        public async Task<IActionResult> Create([Bind("Id,AccountId,RoomId")] RoomConnection roomConnection)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(room);
+                _context.Add(roomConnection);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(room);
+            return View(roomConnection);
         }
 
-        // GET: Rooms/Edit/5
-        [Authorize]
+        // GET: RoomConnections/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -95,23 +73,22 @@ namespace Personnel_Service.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Room.FindAsync(id);
-            if (room == null)
+            var roomConnection = await _context.RoomConnection.FindAsync(id);
+            if (roomConnection == null)
             {
                 return NotFound();
             }
-            return View(room);
+            return View(roomConnection);
         }
 
-        // POST: Rooms/Edit/5
+        // POST: RoomConnections/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Slots,Address")] Room room)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AccountId,RoomId")] RoomConnection roomConnection)
         {
-            if (id != room.Id)
+            if (id != roomConnection.Id)
             {
                 return NotFound();
             }
@@ -120,12 +97,12 @@ namespace Personnel_Service.Controllers
             {
                 try
                 {
-                    _context.Update(room);
+                    _context.Update(roomConnection);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!RoomExists(room.Id))
+                    if (!RoomConnectionExists(roomConnection.Id))
                     {
                         return NotFound();
                     }
@@ -136,11 +113,10 @@ namespace Personnel_Service.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(room);
+            return View(roomConnection);
         }
 
-        // GET: Rooms/Delete/5
-        [Authorize]
+        // GET: RoomConnections/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,32 +124,30 @@ namespace Personnel_Service.Controllers
                 return NotFound();
             }
 
-            var room = await _context.Room
+            var roomConnection = await _context.RoomConnection
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (room == null)
+            if (roomConnection == null)
             {
                 return NotFound();
             }
 
-            return View(room);
+            return View(roomConnection);
         }
 
-        // POST: Rooms/Delete/5
-        [Authorize]
+        // POST: RoomConnections/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var room = await _context.Room.FindAsync(id);
-            _context.Room.Remove(room);
+            var roomConnection = await _context.RoomConnection.FindAsync(id);
+            _context.RoomConnection.Remove(roomConnection);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        [Authorize]
-        private bool RoomExists(int id)
+        private bool RoomConnectionExists(int id)
         {
-            return _context.Room.Any(e => e.Id == id);
+            return _context.RoomConnection.Any(e => e.Id == id);
         }
     }
 }

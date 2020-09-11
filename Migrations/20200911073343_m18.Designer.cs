@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Personnel_Service.Data;
 
 namespace Personnel_Service.Migrations
 {
     [DbContext(typeof(Personnel_ServiceContext))]
-    partial class Personnel_ServiceContextModelSnapshot : ModelSnapshot
+    [Migration("20200911073343_m18")]
+    partial class m18
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
